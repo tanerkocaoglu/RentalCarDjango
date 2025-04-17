@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-#i0(1n78e)^dgs%-p86%0*_5ls
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', '.railway.app']
 
 
 # Application definition
@@ -164,3 +164,6 @@ MEDIA_ROOT = BASE_DIR / 'media' # Proje ana dizininde 'media' klasörü
 # Email Backend Configuration (for development)
 # Send emails to console instead of actually sending them
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Railway ve production için CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
