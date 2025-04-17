@@ -1,0 +1,54 @@
+{% extends 'rentals/base.html' %}
+{% block title %}İletişim - {{ block.super }}{% endblock %}
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4 section-title">İletişim</h1>
+        <div class="row mb-5">
+            <div class="col-lg-5 mb-4 mb-lg-0">
+                <div class="card p-4 shadow-sm border-0 h-100">
+                    <h5 class="mb-3"><i class="bi bi-geo-alt me-2"></i>Adres</h5>
+                    <p class="mb-3">İstanbul, Türkiye</p>
+                    <h5 class="mb-3"><i class="bi bi-telephone me-2"></i>Telefon</h5>
+                    <p class="mb-3"><a href="tel:+902121234567">+90 212 123 45 67</a></p>
+                    <h5 class="mb-3"><i class="bi bi-envelope me-2"></i>E-posta</h5>
+                    <p class="mb-3"><a href="mailto:info@rentique.com">info@rentique.com</a></p>
+                    <div class="mt-4">
+                        <a href="#" class="me-3 text-info fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="me-3 text-primary fs-4"><i class="bi bi-twitter-x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="card p-4 shadow-sm border-0">
+                    <h4 class="mb-3">Bize Ulaşın</h4>
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Adınız</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-posta</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Mesajınız</label>
+                            <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Gönder</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

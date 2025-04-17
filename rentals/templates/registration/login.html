@@ -1,0 +1,63 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Giriş Yap - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Giriş Yap</h2>
+                </div>
+                <div class="card-body">
+                    {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        Kullanıcı adı veya şifre hatalı. Lütfen tekrar deneyin.
+                    </div>
+                    {% endif %}
+
+                    {% if next %}
+                    {% if user.is_authenticated %}
+                    <div class="alert alert-warning" role="alert">
+                        Hesabınızın bu sayfaya erişim yetkisi yok. Lütfen farklı bir hesapla giriş yapın.
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info" role="alert">
+                        Lütfen devam etmek için giriş yapın.
+                    </div>
+                    {% endif %}
+                    {% endif %}
+
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ next }}">
+
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Kullanıcı Adı</label>
+                            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                                class="form-control" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Şifre</label>
+                            <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+                                class="form-control" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Giriş Yap</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <small>
+                        <a href="{% url 'password_reset' %}">Şifremi Unuttum?</a>
+                        {% comment %}
+                        | <a href="#">Hesabınız yok mu? Kayıt Olun</a>
+                        {% endcomment %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

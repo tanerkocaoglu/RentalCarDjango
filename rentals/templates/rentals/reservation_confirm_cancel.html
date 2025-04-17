@@ -1,0 +1,29 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Rezervasyon İptal Onayı - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Rezervasyon İptal Onayı</h1>
+    <div class="alert alert-warning">
+        <strong>Dikkat:</strong> Bu rezervasyonu iptal etmek üzeresiniz. Bu işlem geri alınamaz!
+    </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ reservation.car.brand }} {{ reservation.car.model }} ({{ reservation.car.year }})
+            </h5>
+            <p class="card-text">
+                <strong>Plaka:</strong> {{ reservation.car.license_plate }}<br>
+                <strong>Başlangıç:</strong> {{ reservation.start_date }}<br>
+                <strong>Bitiş:</strong> {{ reservation.end_date }}<br>
+                <strong>Toplam Fiyat:</strong> {{ reservation.total_price }} TL
+            </p>
+        </div>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Evet, Rezervasyonu İptal Et</button>
+        <a href="{% url 'rentals:my_reservations' %}" class="btn btn-secondary ms-2">Vazgeç</a>
+    </form>
+</div>
+{% endblock %}

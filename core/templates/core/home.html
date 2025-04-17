@@ -1,0 +1,166 @@
+{% extends 'rentals/base.html' %}
+{% load static %}
+
+{% block title %}Modern Araç Kiralama Deneyimi - {{ block.super }}{% endblock %}
+
+{% block extra_head %}
+<!-- AOS (Animate On Scroll) CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO ALANI -->
+<section class="hero-section">
+    <div class="container" data-aos="fade-in" data-aos-duration="1000">
+        <h1 class="display-2">Seyahatinizi Özgürleştirin</h1>
+        <p class="lead col-lg-8 mx-auto">Rentique ile konforlu, güvenli ve stil sahibi yolculuklar sizi
+            bekliyor. İhtiyacınıza en uygun aracı şimdi keşfedin.</p>
+        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'rentals:car_list' %}" class="btn btn-warning btn-lg px-5">Araçları Keşfet</a>
+            {% if not user.is_authenticated %}
+            <a href="{% url 'signup' %}" class="btn btn-outline-light btn-lg px-5">Hemen Başla</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- AVANTAJLAR -->
+<section class="advantages-section">
+    <div class="container">
+        <h2 class="section-title">Neden Bizimle Kiralamalısınız?</h2>
+        <div class="row gy-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="bi bi-check2-circle"></i></div>
+                    <h5>Kolay Rezervasyon</h5>
+                    <p>Sadece birkaç tıkla, istediğiniz aracı anında rezerve edin.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                    <h5>Geniş Lokasyon Ağı</h5>
+                    <p>Şehrin birçok noktasında size en yakın yerden aracınızı teslim alın.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="advantage-card">
+                    <div class="advantage-icon"><i class="bi bi-shield-lock-fill"></i></div>
+                    <h5>Güvenlik ve Bakım</h5>
+                    <p>Tüm araçlarımız düzenli bakımdan geçer ve sigortalıdır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- POPÜLER ARAÇLAR -->
+<section class="popular-cars-section">
+    <div class="container">
+        <h2 class="section-title">Popüler Seçimler</h2>
+        <div class="row justify-content-center gy-4">
+            {% for car in popular_cars %}
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0 }}00">
+                <div class="car-card h-100">
+                    <img src="{{ car.image.url|default:'/static/images/default_car.jpg' }}" class="card-img-top"
+                        alt="{{ car.brand }} {{ car.model }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.year }} {{ car.brand }} {{ car.model }}</h5>
+                        <p class="card-text">{{ car.description|truncatechars:70 }}</p>
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                            <span class="price">{{ car.daily_rate }} TL <small class="text-muted fw-normal">/
+                                    Gün</small></span>
+                            <a href="{% url 'rentals:car_detail' car.pk %}" class="btn btn-sm btn-primary">İncele</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted" data-aos="fade-up">
+                <p>Gösterilecek popüler araç bulunamadı.</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% if popular_cars %}
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="{% url 'rentals:car_list' %}" class="btn btn-outline-primary px-5">Tüm Araç Filosunu Gör</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- NASIL ÇALIŞIR? (Opsiyonel Eklendi) -->
+<section class="how-it-works-section">
+    <div class="container">
+        <h2 class="section-title">3 Adımda Kolay Kiralama</h2>
+        <div class="row text-center gy-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="step-icon mb-3 fs-1 text-primary"><i class="bi bi-search"></i></div>
+                <h5>1. Ara & Seç</h5>
+                <p class="text-muted">Tarihlerinizi ve tercihlerinizi belirterek size uygun aracı bulun.</p>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="step-icon mb-3 fs-1 text-primary"><i class="bi bi-calendar-plus-fill"></i></div>
+                <h5>2. Rezerve Et</h5>
+                <p class="text-muted">Online formumuzu doldurarak rezervasyonunuzu saniyeler içinde tamamlayın.</p>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="step-icon mb-3 fs-1 text-primary"><i class="bi bi-key-fill"></i></div>
+                <h5>3. Yola Çık</h5>
+                <p class="text-muted">Belirttiğiniz lokasyondan aracınızı teslim alıp keyifli yolculuğunuza başlayın.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIAL (Yeniden Tasarlandı - Slider) -->
+<section class="testimonial-section">
+    <div class="container">
+        <h2 class="section-title">Müşterilerimiz Ne Diyor?</h2>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="testimonial-card">
+                        <div class="mb-3 fs-1"><i class="bi bi-quote"></i></div>
+                        <p class="testimonial-text">"Rentique ile hem ekonomik hem de çok konforlu bir araç kiraladım.
+                            Müşteri hizmetleri de son derece ilgili ve yardımcıydı. Şiddetle tavsiye ederim!"</p>
+                        <footer class="mt-4 fw-bold"><cite title="Kaynak">Ayşe D.</cite></footer>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="testimonial-card">
+                        <div class="mb-3 fs-1"><i class="bi bi-quote"></i></div>
+                        <p class="testimonial-text">"Rentique sayesinde iş seyahatlerimde her zaman temiz ve bakımlı
+                            araçlar buluyorum. Online rezervasyon sistemi çok pratik!"</p>
+                        <footer class="mt-4 fw-bold"><cite title="Kaynak">Mehmet K.</cite></footer>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="testimonial-card">
+                        <div class="mb-3 fs-1"><i class="bi bi-quote"></i></div>
+                        <p class="testimonial-text">"Rentique ekibi her konuda çok yardımcı oldu. Araç teslimi ve iadesi
+                            çok hızlıydı. Güvenle tavsiye ediyorum."</p>
+                        <footer class="mt-4 fw-bold"><cite title="Kaynak">Selin T.</cite></footer>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Önceki</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Sonraki</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+
+{% endblock %}

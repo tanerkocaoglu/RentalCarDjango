@@ -1,0 +1,120 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Kullanıcı Paneli - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Hoş Geldiniz, {{ profile.user.first_name|default:profile.user.username }}!</h1>
+    <div class="row g-4">
+        <!-- Profil Özeti -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" class="rounded-circle mb-3"
+                        style="width:100px; height:100px; object-fit:cover;" alt="Profil Fotoğrafı">
+                    {% else %}
+                    <i class="bi bi-person-circle" style="font-size:4rem;"></i>
+                    {% endif %}
+                    <h5 class="card-title mt-2">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                    <p class="card-text small text-muted mb-1">{{ profile.user.email }}</p>
+                    {% if profile.phone %}<p class="card-text small mb-1">Telefon: {{ profile.phone }}</p>{% endif %}
+                    {% if profile.driver_license %}<p class="card-text small mb-1">Ehliyet: {{ profile.driver_license }}
+                    </p>{% endif %}
+                    {% if profile.birth_date %}<p class="card-text small mb-1">Doğum Tarihi: {{ profile.birth_date }}
+                    </p>{% endif %}
+                    <a href="{% url 'rentals:profile' %}" class="btn btn-outline-primary btn-sm mt-3">Profili
+                        Düzenle</a>
+                </div>
+            </div>
+        </div>
+        <!-- Aktif Rezervasyonlar -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Aktif Rezervasyonlar</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if active_reservations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Araç</th>
+                                    <th>Başlangıç</th>
+                                    <th>Bitiş</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in active_reservations %}
+                                <tr>
+                                    <td>{{ r.car.brand }} {{ r.car.model }}</td>
+                                    <td>{{ r.start_date }}</td>
+                                    <td>{{ r.end_date }}</td>
+                                    <td>
+                                        {% if r.status == 'confirmed' %}<span class="badge bg-success">Onaylandı</span>
+                                        {% elif r.status == 'pending' %}<span
+                                            class="badge bg-warning text-dark">Bekliyor</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="p-3 text-muted text-center">Aktif rezervasyonunuz bulunmamaktadır.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Geçmiş Rezervasyonlar -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Geçmiş Rezervasyonlar</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if past_reservations %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Araç</th>
+                                    <th>Başlangıç</th>
+                                    <th>Bitiş</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for r in past_reservations %}
+                                <tr>
+                                    <td>{{ r.car.brand }} {{ r.car.model }}</td>
+                                    <td>{{ r.start_date }}</td>
+                                    <td>{{ r.end_date }}</td>
+                                    <td>
+                                        {% if r.status == 'completed' %}<span
+                                            class="badge bg-secondary">Tamamlandı</span>
+                                        {% elif r.status == 'cancelled' %}<span class="badge bg-danger">İptal</span>
+                                        {% elif r.status == 'rejected' %}<span class="badge bg-danger">Reddedildi</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="p-3 text-muted text-center">Geçmiş rezervasyonunuz bulunmamaktadır.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4 d-flex justify-content-center gap-3">
+        <a href="{% url 'rentals:car_list' %}" class="btn btn-primary btn-lg"><i
+                class="bi bi-car-front-fill me-2"></i>Yeni Araç Kirala</a>
+        <a href="{% url 'rentals:my_reservations' %}" class="btn btn-outline-secondary btn-lg"><i
+                class="bi bi-list-ul me-2"></i>Tüm Rezervasyonlarım</a>
+    </div>
+</div>
+{% endblock %}

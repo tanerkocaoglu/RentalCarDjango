@@ -1,0 +1,146 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Müsait Araçlar - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Filtreleme Bölümü -->
+        <div class="col-md-3 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Filtreler</h5>
+                </div>
+                <div class="card-body">
+                    <form method="get" id="filter-form">
+                        <!-- Arama Kutusu -->
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Arama</label>
+                            <input type="text" class="form-control" id="search" name="search" value="{{ search_query }}"
+                                placeholder="Marka, model veya açıklama">
+                        </div>
+
+                        <!-- Marka Filtresi -->
+                        <div class="mb-3">
+                            <label for="brand" class="form-label">Marka</label>
+                            <select class="form-select" id="brand" name="brand">
+                                <option value="">Tümü</option>
+                                {% for brand in all_brands %}
+                                {% if brand == brand_filter %}
+                                <option value="{{ brand }}" selected>{{ brand }}</option>
+                                {% else %}
+                                <option value="{{ brand }}">{{ brand }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Yıl Filtresi -->
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Yıl</label>
+                            <select class="form-select" id="year" name="year">
+                                <option value="">Tümü</option>
+                                {% for year in all_years %}
+                                {% if year|stringformat:"i" == year_filter %}
+                                <option value="{{ year }}" selected>{{ year }}</option>
+                                {% else %}
+                                <option value="{{ year }}">{{ year }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Fiyat Aralığı -->
+                        <div class="mb-3">
+                            <label class="form-label">Günlük Fiyat Aralığı (TL)</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="min_price" value="{{ min_price }}"
+                                        placeholder="Min">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" name="max_price" value="{{ max_price }}"
+                                        placeholder="Max">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Müsaitlik Durumu -->
+                        <div class="mb-3">
+                            <label for="availability" class="form-label">Durum</label>
+                            <select class="form-select" id="availability" name="availability">
+                                <option value="">Tümü</option>
+                                {% if availability == 'available' %}
+                                <option value="available" selected>Müsait</option>
+                                {% else %}
+                                <option value="available">Müsait</option>
+                                {% endif %}
+                                {% if availability == 'unavailable' %}
+                                <option value="unavailable" selected>Müsait Değil</option>
+                                {% else %}
+                                <option value="unavailable">Müsait Değil</option>
+                                {% endif %}
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Filtrele</button>
+                            <a href="{% url 'rentals:car_list' %}" class="btn btn-outline-secondary">Filtreleri
+                                Temizle</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Araç Listesi -->
+        <div class="col-md-9">
+            <h1 class="mb-4">Araçlar</h1>
+
+            {% if cars %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for car in cars %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light"
+                            style="height:220px;">
+                            {% if car.image %}
+                            <img src="{{ car.image.url }}" class="img-fluid" alt="{{ car.brand }} {{ car.model }}"
+                                style="max-height:200px; max-width:100%; object-fit:contain; background:#f8f9fa; border-radius:8px;">
+                            {% else %}
+                            <img src="https://via.placeholder.com/400x200.png?text=Resim+Yok" class="img-fluid"
+                                alt="Resim Yok"
+                                style="max-height:200px; max-width:100%; object-fit:contain; background:#f8f9fa; border-radius:8px;">
+                            {% endif %}
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ car.brand }} {{ car.model }} ({{ car.year }})</h5>
+                            <p class="card-text flex-grow-1">{{ car.description|truncatewords:15 }}</p>
+                            <p class="card-text"><small class="text-muted">Plaka: {{ car.license_plate }}</small></p>
+                            <p class="card-text">
+                                <strong>Günlük Fiyat: {{ car.daily_rate }} TL</strong><br>
+                                <span
+                                    class="badge {% if car.status == 'available' %}bg-success{% else %}bg-danger{% endif %}">
+                                    {% if car.status == 'available' %}Müsait{% else %}Müsait Değil{% endif %}
+                                </span>
+                            </p>
+                            <a href="{% url 'rentals:car_detail' pk=car.pk %}" class="btn btn-primary mt-auto">Detayları
+                                Gör & Kirala</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                {% if search_query or brand_filter or year_filter or min_price or max_price or availability %}
+                Seçilen filtrelere uygun araç bulunamadı.
+                {% else %}
+                Şu anda sistemde kayıtlı araç bulunmamaktadır.
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

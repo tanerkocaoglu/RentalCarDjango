@@ -1,0 +1,50 @@
+{% comment %} Ortak rezervasyon tablosu. 'reservations' context değişkeni bekler. 'show_cancel' True ise iptal butonu
+gösterilir. {% endcomment %}
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Araç</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Durum</th>
+                {% if show_cancel %}<th>İşlem</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.car.brand }} {{ reservation.car.model }}</td>
+                <td>{{ reservation.start_date }}</td>
+                <td>{{ reservation.end_date }}</td>
+                <td>
+                    {% if reservation.status == 'confirmed' %}
+                    <span class="badge bg-success">Onaylandı</span>
+                    {% elif reservation.status == 'pending' %}
+                    <span class="badge bg-warning text-dark">Bekliyor</span>
+                    {% elif reservation.status == 'completed' %}
+                    <span class="badge bg-secondary">Tamamlandı</span>
+                    {% elif reservation.status == 'rejected' %}
+                    <span class="badge bg-danger">Reddedildi</span>
+                    {% else %}
+                    <span class="badge bg-danger">İptal Edildi</span>
+                    {% endif %}
+                </td>
+                {% if show_cancel %}
+                <td>
+                    {% if reservation.status == 'confirmed' or reservation.status == 'pending' %}
+                    <form method="post" action="{% url 'rentals:reservation_cancel' reservation_id=reservation.id %}"
+                        style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('Rezervasyonu iptal etmek istediğinize emin misiniz?');">İptal
+                            Et</button>
+                    </form>
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

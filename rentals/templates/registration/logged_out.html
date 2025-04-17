@@ -1,0 +1,20 @@
+{% extends 'rentals/base.html' %}
+
+{% block title %}Çıkış Yapıldı - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h2 class="mb-4">Çıkış Yapıldı</h2>
+                    <p class="lead">Başarıyla çıkış yaptınız.</p>
+                    <a href="{% url 'login' %}" class="btn btn-primary">Tekrar Giriş Yap</a>
+                    <a href="{% url 'rentals:car_list' %}" class="btn btn-secondary">Ana Sayfaya Dön</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
