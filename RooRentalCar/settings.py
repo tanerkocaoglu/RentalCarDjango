@@ -34,8 +34,7 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 # ALLOWED_HOSTS ortam değişkenine göre ayarla
 # Render deploy'da otomatik olarak *.onrender.com eklenir, yine de ekleyelim
-ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS').split(' ')
-ALLOWED_HOSTS = ALLOWED_HOSTS_STR.split(',')
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(" ")
 
 # Railway için olan CSRF_TRUSTED_ORIGINS yerine Render domain'ini ekle (veya ortam değişkeninden al)
 RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
