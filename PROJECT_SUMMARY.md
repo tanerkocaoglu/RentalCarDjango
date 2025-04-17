@@ -36,11 +36,11 @@ Modern ve kullanıcı dostu bir arayüze sahip, araç kiralama işlemlerini yön
 
 ### 4. Rezervasyon İşlemleri (`rentals`)
 -   **Rezervasyon Oluşturma:** Araç detay sayfasından erişilen form ve görünüm (`reservation_create`) (Tarih seçimi, çakışma kontrolü, fiyat hesaplama).
--   **Rezervasyonlarım Sayfası:** Kullanıcının kendi rezervasyonlarını filtreleyerek görebildiği sayfa (`my_reservations`).
+-   **Kullanıcı Paneli (Dashboard) Üzerinden Rezervasyon Yönetimi:** Tüm rezervasyonlar (aktif ve geçmiş) kullanıcı panelinde (dashboard) 5'erli sayfalama (pagination) ile listelenir ve yönetilir. Ayrı bir "Rezervasyonlarım" (my_reservations) sayfası ve fonksiyonu kaldırılmıştır. Kod ve şablonlar sadeleştirilmiştir.
 -   **Rezervasyon İptali:** Aktif rezervasyonlar için iptal fonksiyonu (`reservation_cancel`).
 -   **Rezervasyon Onay/Red Akışı:** Yeni rezervasyonlar "Beklemede" (pending) başlar, admin panelinden onaylanabilir veya reddedilebilir. Kullanıcıya rezervasyon durumu hakkında bilgilendirme yapılır.
 -   `Reservation` modeli veritabanında rezervasyon bilgilerini tutar.
--   `_reservation_table.html` partial template'i ile rezervasyon listesi tutarlı şekilde gösterilir.
+-   `_reservation_table.html` partial template'i ile rezervasyon listesi tutarlı şekilde gösterilir (dashboard'da sayfalama ile).
 -   Araç müsait olmayan tarihler için API endpoint'i (`car_unavailable_dates`).
 
 ### 5. Kullanıcı Profili (`rentals`)

@@ -112,20 +112,20 @@ class RentalViewsTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404) # 404 Not Found kontrolü
 
-    def test_my_reservations_view_redirects_if_not_logged_in(self):
-        """my_reservations view'ına giriş yapmadan erişildiğinde login sayfasına yönlendirir."""
-        response = self.client.get(reverse('rentals:my_reservations'))
-        login_url = reverse('login')
-        target_url = reverse('rentals:my_reservations')
-        self.assertRedirects(response, f'{login_url}?next={target_url}')
+    # def test_my_reservations_view_redirects_if_not_logged_in(self):
+    #     """my_reservations view'ına giriş yapmadan erişildiğinde login sayfasına yönlendirir."""
+    #     response = self.client.get(reverse('rentals:my_reservations'))
+    #     login_url = reverse('login')
+    #     target_url = reverse('rentals:my_reservations')
+    #     self.assertRedirects(response, f'{login_url}?next={target_url}')
 
-    def test_my_reservations_view_accessible_if_logged_in(self):
-        """my_reservations view'ına giriş yapıldıktan sonra erişilebilir."""
-        self.client.login(username='viewtestuser', password='password123')
-        response = self.client.get(reverse('rentals:my_reservations'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'rentals/my_reservations.html')
-        self.client.logout()
+    # def test_my_reservations_view_accessible_if_logged_in(self):
+    #     """my_reservations view'ına giriş yapıldıktan sonra erişilebilir."""
+    #     self.client.login(username='viewtestuser', password='password123')
+    #     response = self.client.get(reverse('rentals:my_reservations'))
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'rentals/my_reservations.html')
+    #     self.client.logout()
 
     def test_profile_view_redirects_if_not_logged_in(self):
         """profile_view'a giriş yapmadan erişildiğinde login sayfasına yönlendirir."""

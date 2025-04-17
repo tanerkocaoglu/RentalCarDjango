@@ -26,12 +26,24 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-#i0(1n78e)^dgs%-p86%0*_5lsz*07&jf_@pv$z67r2kqk+t#w')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG ortam değişkenine göre ayarla (varsayılan olarak False)
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*', '.railway.app']
+# ALLOWED_HOSTS ortam değişkenine göre ayarla
+# Render deploy'da otomatik olarak *.onrender.com eklenir, yine de ekleyelim
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = ALLOWED_HOSTS_STR.split(',')
+
+# Railway için olan CSRF_TRUSTED_ORIGINS yerine Render domain'ini ekle (veya ortam değişkeninden al)
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS = [f'https://{RENDER_EXTERNAL_HOSTNAME}']
+else:
+    CSRF_TRUSTED_ORIGINS = []
 
 
 # Application definition
@@ -82,24 +94,16 @@ WSGI_APPLICATION = 'RooRentalCar.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Yeni PostgreSQL ayarları (Railway'den gelen URL'i kullan):
-DATABASE_URL = os.getenv('DATABASE_URL')
-
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600, ssl_require=False)
-        # Bağlantı hatası alırsan ssl_require=True dene.
+# Sadece dj-database-url ve DATABASE_URL ile bağlantı (SQLite fallback yok)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    # Eğer .env dosyasında URL yoksa veya lokalde çalışıyorsan diye fallback (isteğe bağlı)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-    print("DATABASE_URL bulunamadı, SQLite kullanılıyor.")
+}
 
+database_url = os.getenv('DATABASE_URL')
+DATABASES["default"] = dj_database_url.parse(database_url)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -164,6 +168,3 @@ MEDIA_ROOT = BASE_DIR / 'media' # Proje ana dizininde 'media' klasörü
 # Email Backend Configuration (for development)
 # Send emails to console instead of actually sending them
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Railway ve production için CSRF trusted origins
-CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']

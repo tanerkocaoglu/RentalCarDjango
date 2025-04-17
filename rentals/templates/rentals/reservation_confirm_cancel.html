@@ -23,7 +23,7 @@
     <form method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Evet, Rezervasyonu İptal Et</button>
-        <a href="{% url 'rentals:my_reservations' %}" class="btn btn-secondary ms-2">Vazgeç</a>
+        <a href="{% url 'rentals:dashboard' %}" class="btn btn-secondary ms-2">Vazgeç</a>
     </form>
 </div>
 {% endblock %}

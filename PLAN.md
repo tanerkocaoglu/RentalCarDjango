@@ -59,7 +59,7 @@ Bu belge, okul ödevi için geliştirilecek oto kiralama web sitesinin geliştir
 ## 4. Frontend Geliştirme (Django Templates - `rentals/templates/rentals/`)
 
 *   **Temel Şablon (`base.html`):** Ortak HTML yapısı, CSS/JS linkleri, navigasyon.
-*   **Sayfa Şablonları:** `index.html`, `car_list.html`, `car_detail.html`, `reservation_form.html`, `my_reservations.html`, `registration/login.html`, `registration/signup.html`.
+*   **Sayfa Şablonları:** `index.html`, `car_list.html`, `car_detail.html`, `reservation_form.html`, `registration/login.html`, `registration/signup.html`.
 *   **Tasarım:**
     *   Bir CSS framework (Bootstrap/Tailwind CSS) entegre et (`pip install django-bootstrap5` veya manuel).
     *   Statik dosyaları (CSS, JS, resimler) yönet (`STATIC_URL`, `STATICFILES_DIRS` ayarları).
@@ -100,6 +100,10 @@ Bu belge, okul ödevi için geliştirilecek oto kiralama web sitesinin geliştir
 - Araçların bakımda, müsait, kirada gibi durumlarını yönetmek için Car modeline status alanı eklendi. is_available alanı kaldırıldı, kodun tamamında tekil durum yönetimi sağlandı.
 - Araçlar sadece bakımda ise listelenmiyor; kirada olsa bile farklı tarihler için kiralanabiliyor.
 - Müsaitlik kontrolü, rezervasyon çakışması ile sağlanıyor; araçlar bakımda değilse her zaman listeleniyor.
+
+### Kullanıcı Paneli ve Rezervasyon Yönetimi (Yapıldı)
+- Ayrı bir "Tüm Rezervasyonlarım" (my_reservations) sayfası ve view'ı kaldırıldı. Tüm rezervasyon yönetimi ve geçmişi artık dashboard üzerinden, sayfalama (pagination) ile gösteriliyor.
+- `my_reservations` view, URL ve şablon dosyası tamamen kaldırıldı. Kod ve template referansları temizlendi.
 
 ## 10. Sıradaki Planlanan Geliştirmeler
 

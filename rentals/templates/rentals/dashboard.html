@@ -1,15 +1,16 @@
-{% load static %}
 {% extends 'rentals/base.html' %}
 
 {% block title %}Kullanıcı Paneli - {{ block.super }}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4">Hoş Geldiniz, {{ profile.user.first_name|default:profile.user.username }}!</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <h1 class="mb-0">Hoş Geldiniz, {{ profile.user.first_name|default:profile.user.username }}!</h1>
+    </div>
     <div class="row g-4">
         <!-- Profil Özeti -->
-        <div class="col-md-4">
-            <div class="card h-100">
+        <div class="col-md-4 d-flex flex-column gap-3 h-100">
+            <div class="card flex-fill">
                 <div class="card-body text-center">
                     {% if profile.profile_image %}
                     <img src="{{ profile.profile_image.url }}" class="rounded-circle mb-3"
@@ -25,6 +26,25 @@
                     {% if profile.birth_date %}<p class="card-text small mb-1">Doğum Tarihi: {{ profile.birth_date }}
                     </p>{% endif %}
                     <a href="{% url 'rentals:profile' %}" class="btn btn-outline-primary btn-sm mt-3">Profili
+                        Düzenle</a>
+                </div>
+            </div>
+            <!-- Ayarlar ve Tercihler Kutusu -->
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="bi bi-gear me-1"></i>Ayarlar ve Tercihler</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-3">
+                        <li><i class="bi bi-envelope me-1"></i> E-posta Bildirimleri: <span
+                                class="text-success">Açık</span></li>
+                        <li><i class="bi bi-bell me-1"></i> SMS Bildirimleri: <span class="text-danger">Kapalı</span>
+                        </li>
+                        <li><i class="bi bi-calendar-event me-1"></i> Rezervasyon Hatırlatıcıları: <span
+                                class="text-success">Açık</span></li>
+                        <li><i class="bi bi-palette me-1"></i> Tema: <span class="text-secondary">Açık</span></li>
+                    </ul>
+                    <a href="{% url 'rentals:profile' %}" class="btn btn-outline-secondary btn-sm w-100">Ayarları
                         Düzenle</a>
                 </div>
             </div>
@@ -45,6 +65,7 @@
                                     <th>Başlangıç</th>
                                     <th>Bitiş</th>
                                     <th>Durum</th>
+                                    <th>İşlem</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,11 +80,57 @@
                                             class="badge bg-warning text-dark">Bekliyor</span>
                                         {% endif %}
                                     </td>
+                                    <td>
+                                        {% if r.status == 'confirmed' or r.status == 'pending' %}
+                                        <form method="post"
+                                            action="{% url 'rentals:reservation_cancel' reservation_id=r.id %}"
+                                            style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-danger btn-sm py-1 px-3"
+                                                style="font-size:0.95rem; line-height:1.3;"
+                                                onclick="return confirm('Rezervasyonu iptal etmek istediğinize emin misiniz?');">İptal
+                                                Et</button>
+                                        </form>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+                    {% if active_reservations.has_other_pages %}
+                    <nav class="mt-2">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            {% if active_reservations.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?active_page={{ active_reservations.previous_page_number }}#active"
+                                    aria-label="Önceki">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                            {% endif %}
+                            {% for num in active_reservations.paginator.page_range %}
+                            <li class="page-item {% if active_reservations.number == num %}active{% endif %}">
+                                <a class="page-link" href="?active_page={{ num }}#active">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if active_reservations.has_next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                    href="?active_page={{ active_reservations.next_page_number }}#active"
+                                    aria-label="Sonraki">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
                     {% else %}
                     <div class="p-3 text-muted text-center">Aktif rezervasyonunuz bulunmamaktadır.</div>
                     {% endif %}
@@ -104,18 +171,43 @@
                             </tbody>
                         </table>
                     </div>
+                    {% if past_reservations.has_other_pages %}
+                    <nav class="mt-2">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            {% if past_reservations.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?past_page={{ past_reservations.previous_page_number }}#past"
+                                    aria-label="Önceki">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                            {% endif %}
+                            {% for num in past_reservations.paginator.page_range %}
+                            <li class="page-item {% if past_reservations.number == num %}active{% endif %}">
+                                <a class="page-link" href="?past_page={{ num }}#past">{{ num }}</a>
+                            </li>
+                            {% endfor %}
+                            {% if past_reservations.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?past_page={{ past_reservations.next_page_number }}#past"
+                                    aria-label="Sonraki">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
                     {% else %}
                     <div class="p-3 text-muted text-center">Geçmiş rezervasyonunuz bulunmamaktadır.</div>
                     {% endif %}
                 </div>
             </div>
         </div>
-    </div>
-    <div class="mt-4 d-flex justify-content-center gap-3">
-        <a href="{% url 'rentals:car_list' %}" class="btn btn-primary btn-lg"><i
-                class="bi bi-car-front-fill me-2"></i>Yeni Araç Kirala</a>
-        <a href="{% url 'rentals:my_reservations' %}" class="btn btn-outline-secondary btn-lg"><i
-                class="bi bi-list-ul me-2"></i>Tüm Rezervasyonlarım</a>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,435 @@
+/* ==================================================
+   ROO OTO KİRALAMA - MODERN CUSTOM STYLES
+   ================================================== */
+
+/* 1. VARIABLES & BASE
+   ================================================== */
+:root {
+    --primary-color: #2C3E50;
+    /* Koyu arduvaz mavisi */
+    --secondary-color: #FFFFFF;
+    /* Beyaz */
+    --accent-color: #1ABC9C;
+    /* Turkuaz/Teal */
+    --light-gray: #F8F9FA;
+    --text-color: #343A40;
+    --heading-font: 'Montserrat', sans-serif;
+    --body-font: 'Open Sans', sans-serif;
+    --border-radius: 8px;
+    /* Hafif yuvarlak köşeler */
+}
+
+body {
+    font-family: var(--body-font);
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+    line-height: 1.7;
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: darken(var(--accent-color), 10%);
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+section {
+    padding: 60px 0;
+}
+
+/* 2. NAVBAR
+   ================================================== */
+.navbar {
+    background-color: var(--secondary-color) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 1rem 0;
+    /* position: sticky; /* İstenirse aktif edilebilir */
+    /* top: 0; */
+    /* z-index: 1030; */
+}
+
+.navbar-brand {
+    font-family: var(--heading-font);
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--primary-color) !important;
+}
+
+.navbar .nav-link {
+    font-family: var(--body-font);
+    font-weight: 600;
+    color: var(--primary-color) !important;
+    margin-left: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link.active::after {
+    width: 100%;
+}
+
+/* 3. BUTTONS
+   ================================================== */
+.btn {
+    font-family: var(--body-font);
+    font-weight: 600;
+    padding: 0.8rem 1.8rem;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: darken(var(--accent-color), 8%);
+    border-color: darken(var(--accent-color), 8%);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 188, 156, 0.2);
+}
+
+.btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #fff;
+}
+
+.btn-outline-light:hover {
+    background-color: #fff;
+    color: var(--primary-color);
+    border-color: #fff;
+}
+
+.btn-warning {
+    /* Accent color olarak degistirildi */
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: darken(var(--accent-color), 8%);
+    border-color: darken(var(--accent-color), 8%);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 188, 156, 0.2);
+}
+
+/* 4. HERO SECTION
+   ================================================== */
+.hero-section {
+    background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyNjQxMDF8MHwxfGFsbHx8fHx8fHx8fDE2NjA0NjYwOTk&ixlib=rb-1.2.1&q=80&w=1920');
+    /* Örnek görsel */
+    background-size: cover;
+    background-position: center center;
+    color: #fff;
+    padding: 100px 0;
+    text-align: center;
+    min-height: 70vh;
+    /* Yüksekliği artır */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-section h1 {
+    font-size: 3.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section p.lead {
+    font-size: 1.3rem;
+    margin-bottom: 2.5rem;
+    opacity: 0.9;
+    max-width: 700px;
+    /* Yazıyı daralt */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 5. SECTIONS & CARDS
+   ================================================== */
+.section-title {
+    text-align: center;
+    margin-bottom: 4rem;
+    font-size: 2.8rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: var(--accent-color);
+    border-radius: 2px;
+}
+
+.advantage-card {
+    background-color: var(--secondary-color);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.advantage-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.advantage-icon {
+    font-size: 3.5rem;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    display: inline-block;
+}
+
+.advantage-card h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--primary-color);
+}
+
+.popular-cars-section {
+    background-color: var(--light-gray);
+    padding: 80px 0;
+}
+
+.car-card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.car-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.car-card img {
+    height: 220px;
+    /* Sabit resim yüksekliği */
+    object-fit: cover;
+    /* Resmi kırparak sığdır */
+}
+
+.car-card .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Kart içeriğinin tüm yüksekliği kaplaması */
+}
+
+.car-card .card-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.car-card .card-text {
+    color: #6c757d;
+    /* Açık gri metin */
+    font-size: 0.95rem;
+    flex-grow: 1;
+    /* Açıklamanın kalan alanı doldurması */
+    margin-bottom: 1.5rem;
+}
+
+.car-card .price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Testimonial */
+.testimonial-section {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 80px 0;
+}
+
+.testimonial-section .section-title {
+    color: #fff;
+}
+
+.testimonial-section .section-title::after {
+    background-color: var(--accent-color);
+}
+
+.testimonial-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.testimonial-card p {
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+/* Uzun yorumların taşmasını engellemek için */
+.testimonial-card .testimonial-text {
+    max-height: 7.5em;
+    /* Yaklaşık 4-5 satır */
+    overflow: hidden;
+    position: relative;
+    /* Gerekirse altta fade efekti için */
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-card footer {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Info Section */
+.info-section {
+    padding: 80px 0;
+}
+
+.info-card {
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.info-card.bg-light {
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.info-card.bg-dark {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.info-card h4 {
+    color: inherit;
+    margin-bottom: 1rem;
+}
+
+.info-card p {
+    color: inherit;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+/* 6. FOOTER
+   ================================================== */
+.footer {
+    background-color: var(--primary-color);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 40px 0;
+    margin-top: 60px;
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.footer .social-icons a {
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+}
+
+/* 7. AOS OVERRIDES (Optional)
+   ================================================== */
+[data-aos] {
+    opacity: 0;
+    transition-property: transform, opacity;
+}
+
+[data-aos].aos-animate {
+    opacity: 1;
+}
+
+/* Koyu tema için basit düzeltmeler */
+[data-bs-theme="dark"] body {
+    background-color: #212529;
+    color: #adb5bd;
+}
+
+[data-bs-theme="dark"] .card,
+[data-bs-theme="dark"] .navbar {
+    background-color: #343a40 !important;
+}
+
+[data-bs-theme="dark"] h1,
+[data-bs-theme="dark"] h2,
+[data-bs-theme="dark"] h3,
+[data-bs-theme="dark"] h4,
+[data-bs-theme="dark"] h5,
+[data-bs-theme="dark"] h6 {
+    color: #f8f9fa;
+}
+
+/* İhtiyaç duyulan diğer düzeltmeler eklenebilir */

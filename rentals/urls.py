@@ -10,7 +10,6 @@ urlpatterns = [
     path('car/<int:pk>/', views.car_detail, name='car_detail'),
     # Rezervasyon işlemleri
     path('car/<int:car_id>/reserve/', views.reservation_create, name='reservation_create'),
-    path('my-reservations/', views.my_reservations, name='my_reservations'),
     path('reservation/<int:reservation_id>/cancel/', views.reservation_cancel, name='reservation_cancel'),
     # Kullanıcı işlemleri
     path('profile/', views.profile_view, name='profile'),

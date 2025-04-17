@@ -11,6 +11,7 @@ from django.http import HttpResponseForbidden, JsonResponse
 from .forms import UserProfileForm, UserBasicForm
 from django.views.decorators.http import require_http_methods
 from django.core.cache import cache
+from django.core.paginator import Paginator
 
 def home_view(request):
     """Basit anasayfa view'ı. Popüler araçları da gönderir."""
@@ -137,7 +138,7 @@ def reservation_create(request, car_id):
         )
         
         messages.info(request, 'Rezervasyonunuz alınmıştır, yönetici onayını bekliyor.')
-        return redirect('rentals:my_reservations')
+        return redirect('rentals:dashboard')
     
     context = {
         'car': car,
@@ -145,35 +146,6 @@ def reservation_create(request, car_id):
         'max_date': (datetime.now().date() + timedelta(days=90)).strftime('%Y-%m-%d'),  # 90 gün ileri
     }
     return render(request, 'rentals/reservation_form.html', context)
-
-@login_required
-def my_reservations(request):
-    """
-    Kullanıcının kendi rezervasyonlarını görüntüleme view'ı.
-    Duruma göre filtreleme yapar.
-    """
-    status_filter = request.GET.get('status', 'active') # Varsayılan: aktif
-    user_id = request.user.id
-    cache_key = f"my_reservations_{user_id}_{status_filter}"
-    reservations = cache.get(cache_key)
-    if not reservations:
-        reservations = Reservation.objects.filter(user=request.user).select_related('car')
-        if status_filter == 'active':
-            reservations = reservations.filter(status__in=['confirmed', 'pending'])
-        elif status_filter == 'completed':
-            reservations = reservations.filter(status='completed')
-        elif status_filter == 'cancelled':
-            reservations = reservations.filter(status='cancelled')
-        elif status_filter != 'all':
-            status_filter = 'active'
-            reservations = reservations.filter(status__in=['confirmed', 'pending'])
-        reservations = reservations.order_by('-created_at')
-        cache.set(cache_key, reservations, 600)
-    context = {
-        'reservations': reservations,
-        'status_filter': status_filter, # Seçili filtreyi template'e gönder
-    }
-    return render(request, 'rentals/my_reservations.html', context)
 
 @login_required
 def reservation_cancel(request, reservation_id):
@@ -186,12 +158,12 @@ def reservation_cancel(request, reservation_id):
         return HttpResponseForbidden("Bu rezervasyonu iptal etme yetkiniz yok.")
     if reservation.status == 'cancelled':
         messages.info(request, 'Bu rezervasyon zaten iptal edilmiş.')
-        return redirect('rentals:my_reservations')
+        return redirect('rentals:dashboard')
     if request.method == 'POST':
         reservation.status = 'cancelled'
         reservation.save()
         messages.success(request, 'Rezervasyon başarıyla iptal edildi.')
-        return redirect('rentals:my_reservations')
+        return redirect('rentals:dashboard')
     # GET ise onay sayfası göster
     return render(request, 'rentals/reservation_confirm_cancel.html', {'reservation': reservation})
 
@@ -278,12 +250,22 @@ def dashboard_view(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
     # Aktif rezervasyonlar: onaylı veya beklemede
-    active_reservations = Reservation.objects.filter(user=user, status__in=['confirmed', 'pending']).select_related('car').order_by('-start_date')
-    # Geçmiş rezervasyonlar: tamamlanmış, iptal edilmiş veya reddedilmiş
-    past_reservations = Reservation.objects.filter(user=user, status__in=['completed', 'cancelled', 'rejected']).select_related('car').order_by('-start_date')
+    active_reservations_qs = Reservation.objects.filter(user=user, status__in=['confirmed', 'pending']).select_related('car').order_by('-start_date')
+    past_reservations_qs = Reservation.objects.filter(user=user, status__in=['completed', 'cancelled', 'rejected']).select_related('car').order_by('-start_date')
+
+    # Pagination
+    active_page_number = request.GET.get('active_page', 1)
+    past_page_number = request.GET.get('past_page', 1)
+    active_paginator = Paginator(active_reservations_qs, 5)
+    past_paginator = Paginator(past_reservations_qs, 5)
+    active_reservations = active_paginator.get_page(active_page_number)
+    past_reservations = past_paginator.get_page(past_page_number)
+
     context = {
         'profile': profile,
         'active_reservations': active_reservations,
         'past_reservations': past_reservations,
+        'active_page_obj': active_reservations,
+        'past_page_obj': past_reservations,
     }
     return render(request, 'rentals/dashboard.html', context)

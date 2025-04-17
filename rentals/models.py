@@ -84,18 +84,18 @@ class Reservation(models.Model):
     #     super().save(*args, **kwargs)
 
 @receiver(post_save, sender=Reservation)
-def clear_my_reservations_cache_on_save(sender, instance, **kwargs):
+def clear_dashboard_reservations_cache_on_save(sender, instance, **kwargs):
+    # Dashboard'daki rezervasyon cache'ini temizle
     user_id = instance.user.id
-    for status in ['active', 'completed', 'cancelled', 'all']:
-        cache_key = f"my_reservations_{user_id}_{status}"
-        cache.delete(cache_key)
+    cache.delete(f"dashboard_active_reservations_{user_id}")
+    cache.delete(f"dashboard_past_reservations_{user_id}")
 
 @receiver(post_delete, sender=Reservation)
-def clear_my_reservations_cache_on_delete(sender, instance, **kwargs):
+def clear_dashboard_reservations_cache_on_delete(sender, instance, **kwargs):
+    # Dashboard'daki rezervasyon cache'ini temizle
     user_id = instance.user.id
-    for status in ['active', 'completed', 'cancelled', 'all']:
-        cache_key = f"my_reservations_{user_id}_{status}"
-        cache.delete(cache_key)
+    cache.delete(f"dashboard_active_reservations_{user_id}")
+    cache.delete(f"dashboard_past_reservations_{user_id}")
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', verbose_name="Kullanıcı")
